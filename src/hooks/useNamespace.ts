@@ -1,7 +1,7 @@
 import type { Ref } from "vue"
 import { ref } from "vue"
 export const defaultPrefix = "lee"
-const statePrefix = 'is-'
+const statePrefix = "is-"
 
 // 定义个_bem方法，此方法返回符合BEM规范的命名
 const _bem = (
@@ -26,7 +26,7 @@ export const useNamespace = (block: string, namespaceOverrides?: Ref<string | un
   const e = (element?: string) => (element ? _bem(namespace.value, block, "", element, "") : "")
 
   const m = (modifier?: string) => (modifier ? _bem(namespace.value, block, "", "", modifier) : "")
-  
+
   const be = (blockSuffix?: string, element?: string) =>
     blockSuffix && element ? _bem(namespace.value, block, blockSuffix, element, "") : ""
 

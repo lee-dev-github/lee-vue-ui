@@ -151,13 +151,17 @@ const flatColumnsFunc = (columns: ColumnProps[], flatArr: ColumnProps[] = []) =>
 // 扁平化 columns
 const flatColumns = computed(() => flatColumnsFunc(tableColumns))
 
-watch(() => flatColumns.value, (value) => {
-  value?.forEach(async (col) => {
-    await setEnumMap(col)
-  })
-}, {
-  immediate: true
-})
+watch(
+  () => flatColumns.value,
+  (value) => {
+    value?.forEach(async (col) => {
+      await setEnumMap(col)
+    })
+  },
+  {
+    immediate: true
+  }
+)
 
 // 过滤需要搜索的配置项 && 排序
 const searchColumns = computed(() => {
@@ -250,7 +254,7 @@ defineExpose({
     />
 
     <!-- 表格主体 -->
-    <div :class="[ cardNs.b(), ns.b('main') ]">
+    <div :class="[cardNs.b(), ns.b('main')]">
       <!-- 表格头部 操作按钮 -->
       <div :class="ns.b('header')">
         <div :class="ns.b('header-button-lf')">

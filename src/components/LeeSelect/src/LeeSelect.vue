@@ -15,12 +15,12 @@ const props = defineProps<SelectProps>()
 
 const emit = defineEmits<{
   "update:modelValue": [value: string | number | boolean | Record<string, any> | unknown[] | null]
-  "change": [value: string | number | boolean | null]
+  change: [value: string | number | boolean | null]
   "visible-change": [visible: boolean]
   "remove-tag": [tagValue: any]
-  "clear": []
-  "blur": [event: FocusEvent]
-  "focus": [event: FocusEvent]
+  clear: []
+  blur: [event: FocusEvent]
+  focus: [event: FocusEvent]
 }>()
 
 const selectModel = computed({
