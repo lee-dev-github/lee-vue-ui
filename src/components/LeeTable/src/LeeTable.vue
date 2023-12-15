@@ -317,7 +317,7 @@ defineExpose({
               <el-radio
                 v-if="item.type == 'radio'"
                 v-model="radio"
-                :label="scope.row[rowKey ?? '']"
+                :label="scope.row[rowKey ?? 'id']"
               >
                 <i></i>
               </el-radio>
