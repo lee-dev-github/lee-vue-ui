@@ -1,6 +1,7 @@
 // import LeeTable from "@/components/LeeTable/src/LeeTable.vue"
 // import type { App } from "vue"
 
+import 'virtual:uno.css'
 import "@/styles/index.scss"
 
 // export * from "src/components/LeeTable/src/types"

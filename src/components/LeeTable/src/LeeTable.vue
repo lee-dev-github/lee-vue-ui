@@ -13,6 +13,7 @@ import ColSetting from "@/components/LeeTable/src/components/ColSetting.vue"
 import TableColumn from "@/components/LeeTable/src/components/TableColumn.vue"
 import Sortable from "sortablejs"
 import { useNamespace } from "@/hooks/useNamespace"
+import type { PageConfig } from "@/hooks/types/table"
 
 export interface LeeTableProps {
   columns: ColumnProps[] // 列配置项  ==> 必传
@@ -23,6 +24,7 @@ export interface LeeTableProps {
   dataCallback?: (data: any) => any // 返回数据的回调函数，可以对数据进行处理 ==> 非必传
   title?: string // 表格标题 ==> 非必传
   pagination?: boolean // 是否需要分页组件 ==> 非必传（默认为true）
+  pageConfig?: PageConfig
   initParam?: any // 初始化请求参数 ==> 非必传（默认为{}）
   border?: boolean // 是否带有纵向边框 ==> 非必传（默认为true）
   toolButton?: ("refresh" | "setting" | "search")[] | boolean // 是否显示表格功能按钮 ==> 非必传（默认为true）
@@ -79,6 +81,7 @@ const {
   props.requestApi,
   props.initParam,
   props.pagination,
+  props.pageConfig,
   props.dataCallback,
   props.requestError
 )
@@ -271,7 +274,7 @@ defineExpose({
               v-if="showToolButton('refresh')"
               :icon="Refresh"
               circle
-              @click="getTableList"
+              @click="() => getTableList"
             />
             <el-button
               v-if="showToolButton('setting') && columns.length"
@@ -353,6 +356,8 @@ defineExpose({
         <Pagination
           v-if="pagination"
           :pageable="pageable"
+          :layout="pageConfig?.layout"
+          :page-sizes="pageConfig?.pageSizes"
           :handle-size-change="handleSizeChange"
           :handle-current-change="handleCurrentChange"
         />

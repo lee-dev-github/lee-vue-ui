@@ -103,12 +103,12 @@ export const isWindow = (val: any): val is Window => {
   return typeof window !== "undefined" && is(val, "Window")
 }
 
-/**
- * @description: 是否为 element 元素
- */
-export const isElement = (val: unknown): val is Element => {
-  return isObject(val) && !!val.tagName
-}
+// /**
+//  * @description: 是否为 element 元素
+//  */
+// export const isElement = (val: unknown): val is Element => {
+//   return isObject(val) && !!val.tagName
+// }
 
 /**
  * @description: 是否为 null
@@ -156,4 +156,9 @@ export const isNilOrEmpty = (value: unknown) => {
  */
 export const isHexColor = (str: string) => {
   return /^#?([0-9A-Fa-f]{3}|[0-9A-Fa-f]{6})$/.test(str)
+}
+
+export const isElement = (e: unknown): e is Element => {
+  if (typeof Element === 'undefined') return false
+  return e instanceof Element
 }

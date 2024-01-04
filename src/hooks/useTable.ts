@@ -1,11 +1,12 @@
 import { reactive, computed, toRefs } from "vue"
-import type { StateProps, Pageable } from "@/hooks/types/table"
+import type { StateProps, Pageable, PageConfig } from "@/hooks/types/table"
 
 /**
  * @description table 页面操作方法封装
  * @param {Function} api 获取表格数据 api 方法 (必传)
  * @param {Object} initParam 获取数据初始化参数 (非必传，默认为{})
  * @param {Boolean} isPageable 是否有分页 (非必传，默认为true)
+ * @param {Object} pageConfig 分页配置(非必传)
  * @param {Function} dataCallBack 对后台返回的数据进行处理的方法 (非必传)
  * @param requestError
  * */
@@ -13,6 +14,7 @@ export const useTable = (
   api?: (params: any) => Promise<any>,
   initParam: object = {},
   isPageable: boolean = true,
+  pageConfig?: PageConfig,
   dataCallBack?: (data: any) => any,
   requestError?: (error: any) => void
 ) => {
@@ -24,7 +26,7 @@ export const useTable = (
       // 当前页数
       pageNum: 1,
       // 每页显示条数
-      pageSize: 10,
+      pageSize: pageConfig?.pageSize ?? 10,
       // 总条数
       total: 0
     },
@@ -33,7 +35,9 @@ export const useTable = (
     // 初始化默认的查询参数
     searchInitParam: {},
     // 总参数(包含分页和查询参数)
-    totalParam: {}
+    totalParam: {
+      param: {}
+    }
   })
 
   /**
@@ -59,8 +63,9 @@ export const useTable = (
     if (!api) return
     try {
       // 先把初始化参数和分页参数放到总参数里面
-      Object.assign(state.totalParam, initParam, isPageable ? pageParam.value : {})
-      let data = await api({ ...state.searchInitParam, ...state.totalParam })
+      // Object.assign(state.totalParam, initParam, isPageable ? pageParam.value : {})
+      updatedTotalParam()
+      let data = await api(state.totalParam)
       dataCallBack && (data = dataCallBack(data))
       state.tableData = isPageable ? data.list : data
       // 解构后台返回的分页数据 (如果有分页更新分页信息)
@@ -78,7 +83,9 @@ export const useTable = (
    * @return void
    * */
   const updatedTotalParam = () => {
-    state.totalParam = {}
+    state.totalParam = {
+      param: {}
+    }
     // 处理查询参数，可以给查询参数加自定义前缀操作
     const nowSearchParam: StateProps["searchParam"] = {}
     // 防止手动清空输入框携带参数（这里可以自定义查询参数前缀）
@@ -92,7 +99,11 @@ export const useTable = (
         nowSearchParam[key] = state.searchParam[key]
       }
     }
-    Object.assign(state.totalParam, nowSearchParam, isPageable ? pageParam.value : {})
+    Object.assign(state.totalParam.param, state.searchInitParam, nowSearchParam, initParam)
+    if (isPageable) {
+      Object.assign(state.totalParam, pageParam.value)
+    }
+    // Object.assign(state.totalParam, nowSearchParam, isPageable ? pageParam.value : {})
   }
 
   /**
@@ -110,7 +121,6 @@ export const useTable = (
    * */
   const search = () => {
     state.pageable.pageNum = 1
-    updatedTotalParam()
     getTableList()
   }
 
@@ -122,7 +132,6 @@ export const useTable = (
     state.pageable.pageNum = 1
     // 重置搜索表单的时，如果有默认搜索参数，则重置默认的搜索参数
     state.searchParam = { ...state.searchInitParam }
-    updatedTotalParam()
     getTableList()
   }
 
