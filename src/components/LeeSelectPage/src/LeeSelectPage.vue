@@ -34,7 +34,7 @@ const props = withDefaults(defineProps<SelectPageProps>(), {
   validateEvent: undefined
 })
 
-const model = defineModel<string | number | boolean | Record<string, any> | unknown[] | null>()
+const model = defineModel<string | number | boolean | Record<string, any> | unknown[]>()
 
 type State = Pageable & {
   lastPageNum: number
@@ -160,7 +160,7 @@ watchDebounced(
 </script>
 
 <template>
-  <el-select v-bind="{ ...props }" v-model="model" :multiple="multiple" :placeholder="placeholder">
+  <el-select v-bind="props" v-model="model" :multiple="multiple" :placeholder="placeholder">
     <template #header>
       <el-input v-model="state.query" size="small" clearable>
         <template #prefix>
@@ -232,7 +232,7 @@ watchDebounced(
     </template>
     <el-option
       v-for="item in state.options"
-      :key="item.value"
+      :key="String(item.value)"
       :label="item.label"
       :value="item.value"
     />

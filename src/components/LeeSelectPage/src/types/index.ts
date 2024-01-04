@@ -7,7 +7,7 @@ export interface SelectPageProps {
   initRequestParam?: Record<string, any>
   requestApi: (param: PageDataReq) => Promise<PageDataResp>
   fetchSelectedApi: (value: any[]) => Promise<EnumProps[]>
-  modelValue?: string | number | boolean | Record<string, any> | unknown[] | null
+  modelValue?: string | number | boolean | Record<string, any> | unknown[]
   multiple?: boolean
   disabled?: boolean
   valueKey?: string

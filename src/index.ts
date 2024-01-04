@@ -21,3 +21,4 @@ import "@/styles/index.scss"
 // export default LeeUI
 
 export * from "@/components/LeeTable/index"
+export * from "@/components/LeeSelectPage/index"
