@@ -40,8 +40,17 @@ const props = withDefaults(defineProps<LeeTableProps>(), {
   initParam: {},
   border: true,
   toolButton: true,
-  searchCol: () => ({ xs: 1, sm: 2, md: 2, lg: 3, xl: 4 })
+  searchCol: () => ({ xs: 1, sm: 2, md: 2, lg: 3, xl: 4 }),
+  size: "default"
 })
+
+// 定义 emit 事件
+const emit = defineEmits<{
+  search: []
+  reset: []
+  dragSort: [{ newIndex?: number; oldIndex?: number }]
+  radioChange: [value: string | number | boolean, item: Record<any, any>, index: number]
+}>()
 
 const ns = useNamespace("table")
 const cardNs = useNamespace("card")
@@ -62,6 +71,9 @@ const showToolButton = (key: "refresh" | "setting" | "search") => {
 
 // 单选值
 const radio = ref("")
+const onRadioChange = (value: string | number | boolean, item: Record<any, any>, index: number) => {
+  emit("radioChange", value, item, index)
+}
 
 // 表格多选 Hooks
 const { selectionChange, selectedList, selectedListIds, isSelected } = useSelection(props.rowKey)
@@ -192,13 +204,6 @@ const colSetting = tableColumns!.filter((item) => {
 })
 const openColSetting = () => colRef.value.openColSetting()
 
-// 定义 emit 事件
-const emit = defineEmits<{
-  search: []
-  reset: []
-  dragSort: [{ newIndex?: number; oldIndex?: number }]
-}>()
-
 const _search = () => {
   search()
   emit("search")
@@ -321,6 +326,7 @@ defineExpose({
                 v-if="item.type == 'radio'"
                 v-model="radio"
                 :label="scope.row[rowKey ?? 'id']"
+                @change="(value) => onRadioChange(value, scope.row, scope.$index)"
               >
                 <i></i>
               </el-radio>
