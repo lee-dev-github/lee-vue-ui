@@ -4,4 +4,4 @@ import { withInstall } from "@/utils/install"
 export const LeeTable = withInstall(LeeTableVue)
 export default LeeTable
 
-export * from "./src/types/index"
+export type * from "./src/types/index"

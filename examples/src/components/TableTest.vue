@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref } from "vue"
-import type { ColumnProps } from "src/components/LeeTable/src/types"
 import LeeTable from "@/components/LeeTable/src/LeeTable.vue"
+import type { ColumnProps } from "@/components/LeeTable"
 
 const columns = ref<ColumnProps[]>([
   {
