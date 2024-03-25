@@ -1,5 +1,5 @@
 import type { MaybeRef, VNode } from "vue"
-import type { LeeDialogProps } from "@/components/LeeDialog/src/types"
+import type { LeeDialogProps2 } from "@/components/LeeDialog/src/types"
 import { computed, h, isVNode, reactive, ref, render } from "vue"
 import { ElButton, ElDialog } from "element-plus"
 import { isFunction } from "@/utils/is"
@@ -10,16 +10,16 @@ type Comp = {
   footer?: VNode | (() => VNode)
 }
 
-export const useDialog = (comp: Comp, opts: MaybeRef<LeeDialogProps>) => {
+export const useDialogOld = (comp: Comp, opts: MaybeRef<LeeDialogProps2>) => {
   const options = ref(opts)
 
-  const defaultState: LeeDialogProps = {
+  const defaultState: LeeDialogProps2 = {
     appendToBody: true,
     destroyOnClose: true,
     cancelText: "取消",
     confirmText: "确定"
   }
-  const dialogState = reactive<LeeDialogProps>(
+  const dialogState = reactive<LeeDialogProps2>(
     Object.assign({}, defaultState, options.value, {
       modelValue: false
     })

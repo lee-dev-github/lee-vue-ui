@@ -1,5 +1,5 @@
 <script setup lang="tsx">
-import { useDialog } from "@/components/LeeDialog"
+import { useDialog, useDialogOld } from "@/components/LeeDialog"
 import { ElInput } from "element-plus"
 import { reactive, watch } from "vue"
 
@@ -14,17 +14,24 @@ watch(
   }
 )
 
-const { open, close } = useDialog(
-  {
-    content: () => <ElInput v-model={formModel.username}></ElInput>
-  },
-  {
-    title: "title3"
-  }
-)
+// const { open, close } = useDialogOld(
+//   {
+//     content: () => <ElInput v-model={formModel.username}></ElInput>
+//   },
+//   {
+//     title: "title3"
+//   }
+// )
+
+const dialog = useDialog()
 
 const onOpenClick = () => {
-  open()
+  // open()
+  dialog.create({
+    title: "",
+    content: "123",
+    closeOnClickModal: false
+  })
 }
 
 const onCloseClick = () => {
