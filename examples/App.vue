@@ -6,8 +6,9 @@ import DialogTest from "./src/components/DialogTest.vue"
 import SelectTableTest from "./src/components/SelectTableTest.vue"
 import SelectPageTest from "./src/components/SelectPageTest.vue"
 import FormTest from "./src/components/FormTest.vue"
+import SelectPageCoreTest from "./src/components/SelectPageCoreTest.vue"
 
-const activeName = ref("TableTest")
+const activeName = ref("SelectPageCoreTest")
 </script>
 
 <template>
@@ -15,6 +16,9 @@ const activeName = ref("TableTest")
     <el-tabs v-model="activeName">
       <el-tab-pane label="LeeTable" name="TableTest">
         <TableTest></TableTest>
+      </el-tab-pane>
+      <el-tab-pane label="SelectPageCoreTest" name="SelectPageCoreTest">
+        <SelectPageCoreTest></SelectPageCoreTest>
       </el-tab-pane>
       <el-tab-pane label="SelectPageTest" name="SelectPageTest">
         <SelectPageTest></SelectPageTest>
