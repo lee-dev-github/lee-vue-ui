@@ -3,8 +3,17 @@ import type { VNode } from "vue"
 import { ref } from "vue"
 import { useNamespace } from "@/hooks/useNamespace"
 import { ElIcon } from "element-plus"
-import { Search as SearchIcon } from "@element-plus/icons-vue"
+import { Search as SearchIcon, Loading as LoadingIcon } from "@element-plus/icons-vue"
 import { useDebounceFn } from "@vueuse/core"
+
+interface SelectPageCoreProps {
+  fetchData?: (searchText: string) => Promise<Record<string, any>[]>
+  fetchSelectedData?: () => Promise<any>
+}
+
+const props = defineProps<SelectPageCoreProps>()
+
+const model = defineModel()
 
 const ns = useNamespace("sp")
 
@@ -14,32 +23,52 @@ const RenderContainer = (children: VNode[]) => {
   return <div class={ns.b("container")}>{children.map((item) => item)}</div>
 }
 
+const isLoading = ref(false)
+const tableData = ref<Record<string, any>[]>([])
+
 const RenderList = () => {
-  const arr = []
-  for (let i = 0; i < 100; i++) {
-    arr.push(String(i))
-  }
   return (
     <div class={ns.b("list")}>
-      {arr.map((item) => (
-        <div class={ns.be("list", "item")}>{item}</div>
-      ))}
+      {tableData.value.length ? (
+        tableData.value.map((item) => <div class={ns.be("list", "item")}>{item}</div>)
+      ) : (
+        <div class={ns.be("list", "empty")}>暂无数据</div>
+      )}
     </div>
   )
 }
 
-const handleSearchChange = useDebounceFn((e: Event) => {
+const handleSearchChange = useDebounceFn(async (e: Event) => {
   searchText.value = (e.target as HTMLInputElement).value
   console.log("search change: ", searchText.value)
-}, 1000)
+  try {
+    isLoading.value = true
+    tableData.value = (await props.fetchData?.(searchText.value)) ?? []
+  } catch (e) {
+    console.error(e)
+    tableData.value = []
+  } finally {
+    isLoading.value = false
+  }
+}, 500)
 
 const RenderSearch = () => {
   return (
     <div class={ns.b("search")}>
-      <ElIcon class={ns.b("search-left")}>
-        <SearchIcon class={ns.be("search-left", "icon")} />
-      </ElIcon>
-      <input class={ns.be("search", "input")} placeholder="搜索..." onChange={handleSearchChange}></input>
+      {isLoading.value ? (
+        <ElIcon class={[ns.b("search-left"), ns.is("loading")]}>
+          <LoadingIcon class={ns.be("search-left", "icon")} />
+        </ElIcon>
+      ) : (
+        <ElIcon class={ns.b("search-left")}>
+          <SearchIcon class={ns.be("search-left", "icon")} />
+        </ElIcon>
+      )}
+      <input
+        class={ns.be("search", "input")}
+        placeholder="搜索..."
+        onInput={handleSearchChange}
+      ></input>
     </div>
   )
 }
@@ -89,7 +118,6 @@ const Render = () => RenderContainer([RenderSearch(), RenderList(), RenderPage()
       }
     }
 
-
     @include b("sp-search-left") {
       @include e("icon") {
         color: #aaa;
@@ -112,6 +140,14 @@ const Render = () => RenderContainer([RenderSearch(), RenderList(), RenderPage()
         color: #000;
         border-radius: 0.4rem;
       }
+    }
+
+    @include e("empty") {
+      padding: 4px 8px;
+      color: #666;
+      transition: all 0.3s ease;
+      cursor: default;
+      user-select: none;
     }
   }
 }
