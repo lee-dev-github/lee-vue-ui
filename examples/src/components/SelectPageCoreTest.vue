@@ -1,21 +1,32 @@
 <script setup lang="ts">
 import LeeSelectPageCore from "@/components/LeeSelectPage/src/LeeSelectPageCore.vue"
+import type { PageReq, PageResp } from "@/components/LeeSelectPage"
 
-const fetchData = async (searchText: string) => {
-  console.log(searchText)
+const fetchData = async (req: PageReq) => {
+  console.log(req)
 
-  const res: Record<string, any> = []
-  for (let i = 0; i < 100; i++) {
-    res.push(String(i))
+  const res: Record<string, any>[] = []
+  for (let i = 1; i <= 1002; i++) {
+    res.push({
+      id: i,
+      name: String(i) + "-name"
+    })
   }
 
-  return new Promise((resolve) => {
+  const totalList = res.filter((item) => item.name.includes(req.param?.searchText ?? ''))
+  const list = totalList.filter((item, index) => index >= (req.pageNum - 1) * req.pageSize && index < req.pageNum * req.pageSize)
+
+  return new Promise<PageResp>((resolve) => {
     setTimeout(() => {
-      resolve(res)
-    }, 1200)
+      resolve({
+        list: list,
+        total: totalList.length,
+        pageNum: req.pageNum,
+        pageSize: req.pageSize
+      })
+    }, 600)
   })
 }
-
 </script>
 
 <template>

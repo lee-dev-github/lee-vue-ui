@@ -49,3 +49,26 @@ export interface SelectPageProps {
   popperOptions?: any
   ariaLabel?: string
 }
+
+
+//--------------------
+
+export interface PageReq {
+  pageNum: number
+  pageSize: number
+  param?: Recordable
+}
+
+export interface PageResp {
+  list: Recordable[]
+  total: number
+  pageNum: number
+  pageSize: number
+}
+
+export interface SelectPageCoreProps {
+  prop?: string,
+  label?: string,
+  fetchData?: (req: PageReq) => Promise<PageResp>
+  fetchSelectedData?: () => Promise<any>
+}
